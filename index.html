@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KUST LMS - Admin Portal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Auth Container -->
+    <div id="auth-container" class="auth-container">
+        <div class="card auth-card fade-in">
+            <h2 id="auth-title" style="text-align: center; width: 100%;">Admin Login</h2>
+            <form id="auth-form">
+                <div class="form-group" id="name-group" style="display: none;">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" id="name" class="form-control" placeholder="Enter your name">
+                </div>
+                <div class="form-group">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" id="email" class="form-control" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" class="form-control" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+            </form>
+            <p style="text-align: center; margin-top: 1.5rem; color: var(--text-muted);">
+                <span id="toggle-text">Don't have an account?</span>
+                <a href="#" id="toggle-auth">Register</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- App Content (Hidden until logged in) -->
+    <div id="app-content">
+        <nav class="navbar">
+            <div class="container">
+                <span class="nav-brand" onclick="Router.navigate('dashboard')">KUST LMS</span>
+                <ul class="nav-links">
+                    <li><a href="#" class="nav-link active" data-target="dashboard">Dashboard</a></li>
+                    <li><a href="#" class="nav-link" data-target="students">Students</a></li>
+                    <li><a href="#" class="nav-link" data-target="teachers">Teachers</a></li>
+                    <li><a href="#" class="nav-link" data-target="attendance">Attendance</a></li>
+                    <li><a href="#" onclick="logout()" class="nav-link" style="color: var(--error-color);">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="container fade-in" style="margin-top: 2rem;">
+            
+            <!-- Dashboard View -->
+            <section id="view-dashboard" class="view-section active">
+                <h1>Dashboard</h1>
+                <p style="color: var(--text-muted); margin-bottom: 2rem;">Welcome to the admin dashboard.</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                    <div class="card">
+                        <h3>Students</h3>
+                        <p style="margin-bottom: 1rem; color: var(--text-muted);">Manage student records.</p>
+                        <button class="btn btn-primary" onclick="Router.navigate('students')">Manage Students &rarr;</button>
+                    </div>
+                    <div class="card">
+                        <h3>Teachers</h3>
+                        <p style="margin-bottom: 1rem; color: var(--text-muted);">Manage faculty members.</p>
+                        <button class="btn btn-primary" onclick="Router.navigate('teachers')">Manage Teachers &rarr;</button>
+                    </div>
+                    <div class="card">
+                        <h3>Attendance</h3>
+                        <p style="margin-bottom: 1rem; color: var(--text-muted);">Track daily attendance.</p>
+                        <button class="btn btn-primary" onclick="Router.navigate('attendance')">View Attendance &rarr;</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Students View -->
+            <section id="view-students" class="view-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h1>Students</h1>
+                    <button class="btn btn-primary" onclick="Students.openModal()">+ Add Student</button>
+                </div>
+                <div class="card table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Admin ID</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="students-body">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Teachers View -->
+            <section id="view-teachers" class="view-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h1>Teachers</h1>
+                    <button class="btn btn-primary" onclick="Teachers.openModal()">+ Add Teacher</button>
+                </div>
+                <div class="card table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Admin ID</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="teachers-body">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Attendance View -->
+            <section id="view-attendance" class="view-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h1>Attendance</h1>
+                    <button class="btn btn-primary" onclick="Attendance.openModal()">+ Add Attendance</button>
+                </div>
+                <div class="card table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Student ID</th>
+                                <th>Teacher ID</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="attendance-body">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Modals -->
+
+    <!-- Student Modal -->
+    <div id="student-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="student-modal-title">Add Student</h2>
+            <form id="student-form">
+                <input type="hidden" id="student-id">
+                <div class="form-group">
+                    <label class="form-label">Name</label>
+                    <input type="text" id="student-name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" id="student-email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" id="student-password" class="form-control" placeholder="Leave blank if unchanged">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Admin ID</label>
+                    <input type="number" id="student-admin-id" class="form-control" value="1" required>
+                </div>
+                <button type="submit" id="save-student-btn" class="btn btn-primary" style="width: 100%;">Save Student</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Teacher Modal -->
+    <div id="teacher-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="teacher-modal-title">Add Teacher</h2>
+            <form id="teacher-form">
+                <input type="hidden" id="teacher-id">
+                <div class="form-group">
+                    <label class="form-label">Name</label>
+                    <input type="text" id="teacher-name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" id="teacher-email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" id="teacher-password" class="form-control" placeholder="Leave blank if unchanged">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Admin ID</label>
+                    <input type="number" id="teacher-admin-id" class="form-control" value="1" required>
+                </div>
+                <button type="submit" id="save-teacher-btn" class="btn btn-primary" style="width: 100%;">Save Teacher</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Attendance Modal -->
+    <div id="attendance-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="attendance-modal-title">Record Attendance</h2>
+            <form id="attendance-form">
+                <input type="hidden" id="attendance-id">
+                <div class="form-group">
+                    <label class="form-label">Date</label>
+                    <input type="date" id="att-date" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Status</label>
+                    <select id="att-status" class="form-control">
+                        <option value="present">Present</option>
+                        <option value="absent">Absent</option>
+                        <option value="late">Late</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Student ID</label>
+                    <input type="number" id="att-student-id" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Teacher ID</label>
+                    <input type="number" id="att-teacher-id" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Admin ID</label>
+                    <input type="number" id="att-admin-id" class="form-control" value="1" required>
+                </div>
+                <button type="submit" id="save-attendance-btn" class="btn btn-primary" style="width: 100%;">Save Record</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+    <script src="script.js"></script>
+</body>
+</html>
